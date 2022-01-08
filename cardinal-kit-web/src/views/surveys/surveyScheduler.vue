@@ -221,6 +221,7 @@ export default {
               title = schedule.text
             }
             if (schedule.startTime) {
+              // Do not change these toDates
               let startTime = schedule.startTime.toDate();
               let startTimeDay = new Date(startTime.getTime());
               startTimeDay.setHours(0);
