@@ -24,7 +24,7 @@ export const FetchLastQuantityData = async(
   let lastRecord = await FetchQuantityData(quantity_type,payload)
   
   if(lastRecord.length>0){
-    let date = lastRecord[0].header.creation_date_time.toDate()
+    let date = new Date(lastRecord[0].header.creation_date_time)
     date.setHours(0,0,0)
     let endDate = new Date(date)
     endDate.setHours(23,59,59)
