@@ -35,11 +35,12 @@ export const FetchSpecificTypeData = async ({ commit }, payload) => {
       .LIMIT(1);
     let dateSnap = await NewRef.Execute();
     if (dateSnap.docs.length > 0) {
-      let endDate = dateSnap.docs[0].data().header.creation_date_time.toDate();
+      console.log('hit the one')
+      let endDate = new Date(dateSnap.docs[0].data().header.creation_date_time);
       let startDate = new Date(endDate);
       startDate.setDate(-30);
-      Ref = Ref.WHERE(["header.creation_date_time", ">=", startDate]);
-      Ref = Ref.WHERE(["header.creation_date_time", "<=", endDate]);
+      Ref = Ref.WHERE(["header.creation_date_time", ">=", startDate.toISOString()]);
+      Ref = Ref.WHERE(["header.creation_date_time", "<=", endDate.toISOString()]);
 
       let snapShot = await Ref.Execute();
       records = snapShot.docs.map((record) => {
