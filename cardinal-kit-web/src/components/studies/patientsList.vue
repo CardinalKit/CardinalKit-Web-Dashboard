@@ -158,7 +158,7 @@ import moment from 'moment';
   .btn-loading{
     width: 3.4em;
     padding: 0.4rem 0.8em;
-    mrgin-right: 0.1rem;
+    margin-right: 0.1rem;
     background: black;
     color: white;
   }
