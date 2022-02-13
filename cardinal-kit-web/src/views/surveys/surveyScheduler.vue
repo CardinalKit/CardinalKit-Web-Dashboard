@@ -268,7 +268,9 @@ export default {
             endTime: this.endDate ? new Date(this.endDate):null,
             interval:{ day:this.intervalDays},
             targetValues: [{groupIdentifier:this.SurveySelected}],
-            text: this.description
+            text: this.description, 
+            relativeStartDays: this.relativeStartDays ? this.relativeStartDays:null,
+            relativeEndDays: this.relativeEndDays ? this.relativeEndDays:null,
           }
         }
 
