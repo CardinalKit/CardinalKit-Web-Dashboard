@@ -90,9 +90,7 @@
               <div :class="cl" v-if="errMsg">
                 {{ msg }}
               </div>
-              <!-- <h4 v-if="this.patient.majorEventDate" class="m-2 text-center">Day 0: {{ this.patient.majorEventDate ? this.patient.majorEventDate.toDate().toLocaleString('en-US') : "none"}}</h4> -->
-              <label>{{ majorEventName }} day 0:</label>
-              <input v-model="majorEventDate" type="datetime-local" />
+              <h4>{{ majorEventName }} is scheduled on {{ dateDisplay(majorEventDate) }}</h4>
               <br /><br />
               <label>Relative start days: </label>
               <input v-model="relativeStartDays" type="number" default="0" pattern="^[0-9]+" />
@@ -188,7 +186,7 @@ export default {
     ...mapActions("surveys",["CreateStudySchedule","CreateUserSchedule"]),
     calculateStartDate(majorEventDate, relativeStartDays) {
       this.relativeStartDate = moment(majorEventDate).add(relativeStartDays, "days")
-      return(this.relativeStartDate.format("MM-DD-YYYY"))
+      return(this.dateDisplay(this.relativeStartDate))
     },
     calculateEndDate(majorEventDate, relativeEndDays) {
       if(!this.relativeStartDate){
@@ -204,7 +202,10 @@ export default {
         this.msg = null
         this.cl = null
       }
-      return(this.relativeEndDate.format("MM-DD-YYYY"))
+      return(this.dateDisplay(this.relativeEndDate))
+    },
+    dateDisplay(dateToDisplay) {
+      return moment(dateToDisplay).format("MM-DD-YYYY")
     },
     periodChanged(range, eventSource) {
       this.displayLastDate = range.displayLastDate;
