@@ -27,6 +27,14 @@
                     </div>
                     <label>Major event name: </label>
                     <input v-model="majorEventName" name="majorEventName" type="text" placeholder="Event name" />
+                    <!-- TODO: 
+                      1) add a test here to see if the patient has any tasks set
+                      OR
+                      2) make a way to be able to reset relative dates
+                     -->
+                    <h4 v-if="majorEventDate">Use caution when changing {{ majorEventName }} date. 
+                      <br />
+                      This will not change any events set by relative dates </h4>
                     <label>{{ majorEventName }} date: </label>
                     <input v-model="majorEventDate" name="majorEventDate" type="datetime-local" />
                     <br />
