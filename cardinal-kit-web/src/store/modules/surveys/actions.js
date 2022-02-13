@@ -168,10 +168,14 @@ export const FetchUserScheduler = async ({ commit }, { studyId, userId }) => {
   tasks.forEach((task) => {
     taskDictionary[task.id] = task.data();
   });
+  let user = await request
+    .GET(`/studies/${studyId}/users/${userId}/`)
+    .Execute();
   commit("saveSchedulerByUser", {
     studyId: studyId,
     tasks: taskDictionary,
     userId: userId,
+    patient: user.data()
   });
 };
 

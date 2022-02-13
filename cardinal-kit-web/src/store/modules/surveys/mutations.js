@@ -294,7 +294,8 @@ export function saveSchedulesByStudy(state,{studyId,tasks}){
   state.schedulesByStudy[studyId]=tasks
 }
 
-export function saveSchedulerByUser(state,{studyId,userId,tasks}){
+export function saveSchedulerByUser(state,{studyId,userId,tasks,patient}){
   state.schedulesByUser[studyId] = {}
   state.schedulesByUser[studyId][userId] = tasks
+  state.patient = patient
 }

@@ -16,6 +16,12 @@ export function getUserAnswers(state){
   }
 }
 
+export function getUser(state){
+  return ()=>{
+    return state.patient
+  }
+}
+
 ///Scheduler
 export function getScheduleTasksByStudy(state){
   return (studyId)=>{

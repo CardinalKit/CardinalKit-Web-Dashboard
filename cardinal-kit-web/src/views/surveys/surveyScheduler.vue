@@ -44,7 +44,7 @@
       </template>
     </alt-table>
     <div class="inline my-4" id="calendar">
-      <a class="modal-show button" href="#modal" @click="resetForm">Add survey to calendar</a>
+      <a class="modal-show button" href="#modal" @click="resetForm">Add fixed date survey</a>
       <div class="modal" id="modal">
         <div class="modal-content">
           <a class="modal-hide" href="#">✕</a>
@@ -81,6 +81,56 @@
             </div>
         </div>
       </div>
+      <a v-if="setPatient" class="modal-show button" href="#modalRelative" @click="resetForm">Add relative date survey</a>
+      <div class="modal" id="modalRelative">
+        <div class="modal-content">
+          <a class="modal-hide" href="#">✕</a>
+          <h2 class="m-4 text-center">Relative scheduling of surveys</h2>
+            <div class="input-form" >
+              <div :class="cl" v-if="errMsg">
+                {{ msg }}
+              </div>
+              <!-- <h4 v-if="this.patient.majorEventDate" class="m-2 text-center">Day 0: {{ this.patient.majorEventDate ? this.patient.majorEventDate.toDate().toLocaleString('en-US') : "none"}}</h4> -->
+              <label>{{ majorEventName }} day 0:</label>
+              <input v-model="majorEventDate" type="datetime-local" />
+              <br /><br />
+              <label>Relative start days: </label>
+              <input v-model="relativeStartDays" type="number" default="0" pattern="^[0-9]+" />
+              <br />
+              <div>
+                Start date: {{ calculateStartDate(this.majorEventDate, this.relativeStartDays) }}
+              </div>
+              <br />
+              <label>Relative end days: </label>
+              <input v-model="relativeEndDays" type="number" pattern="^[0-9]+" />
+              <br />
+              <div v-if="this.relativeEndDays" >
+                End date: {{ calculateEndDate(this.majorEventDate, this.relativeEndDays) }}
+                <br />
+                <br />
+              </div>
+              <label>Interval days: </label>
+              <input v-model="intervalDays" type="number" min="1" pattern="^[0-9]+" />
+              <br />
+              <label>Survey: </label>
+              <alt-select :options="surveys" v-model="SurveySelected" />
+              <br />
+              <label>Description: </label>
+              <input
+                v-model="description"
+                type="text"
+                placeholder="Enter the description"
+              />
+              <br />
+              <div class="form-group text-center inline">
+                <a @click="saveNewRelativeSchedule" class="m-1 button" >
+                  Save
+                </a>
+                <a href="#" class="m-1 button">Cancel</a>
+              </div>
+            </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -93,7 +143,7 @@ import "vue-simple-calendar/static/css/holidays-us.css";
 import altTable from "@/components/tables/altTable";
 import altSelect from "@/components/multiSelect/Select";
 import modal from "@/components/modals/modal.vue";
-
+import moment from 'moment';
 import store from "@/store";
 import { mapActions, mapGetters } from "vuex";
 
@@ -119,7 +169,12 @@ export default {
       intervalDays:1 ,
       SurveySelected: null,
       description: "",
-      cl: ""
+      cl: "",
+      patient:null,
+      majorEventDate:null,
+      majorEventName:null,
+      relativeStartDays:0,
+      relativeEndDays:null,
     };
   },
   components: {
@@ -131,6 +186,26 @@ export default {
   },
   methods: {
     ...mapActions("surveys",["CreateStudySchedule","CreateUserSchedule"]),
+    calculateStartDate(majorEventDate, relativeStartDays) {
+      this.relativeStartDate = moment(majorEventDate).add(relativeStartDays, "days")
+      return(this.relativeStartDate.format("MM-DD-YYYY"))
+    },
+    calculateEndDate(majorEventDate, relativeEndDays) {
+      if(!this.relativeStartDate){
+        console.log("No relativeStartDate, unable to check if relative end days is valid")
+      }
+      this.relativeEndDate = moment(majorEventDate).add(relativeEndDays, "days")
+      if(this.relativeEndDate < this.relativeStartDate) {
+        this.errMsg = true
+        this.msg = "End date is before start date"
+        this.cl = "alert-err"
+      }else{
+        this.errMsg = false
+        this.msg = null
+        this.cl = null
+      }
+      return(this.relativeEndDate.format("MM-DD-YYYY"))
+    },
     periodChanged(range, eventSource) {
       this.displayLastDate = range.displayLastDate;
       this.displayFirstDate = range.displayFirstDate;
@@ -149,9 +224,21 @@ export default {
       this.errMsg=false
       this.startDate= null
       this.endDate= null
+      this.relativeStartDays=0
+      this.relativeEndDays=null
       this.intervalDays=1 
       this.SurveySelected= null
       this.description = ""
+      if(this.patient?.majorEventDate){
+        this.majorEventDate=moment(this.patient.majorEventDate.toDate()).format('YYYY-MM-DDTHH:mm')
+      } else {
+        this.majorEventDate=null
+      }
+      if(this.patient?.majorEventName){
+        this.majorEventName=this.patient.majorEventName
+      } else {
+        this.majorEventName=null
+      }
     },
     saveNewSchedule(){
       this.cl = ""
@@ -204,10 +291,38 @@ export default {
         this.SurveySelected= null
         this.description = ""
       }
+    },
+    saveNewRelativeSchedule(){
+      if(!this.relativeStartDate){
+        this.errMsg = true
+        this.msg = "Start date is missing"
+        this.cl = "alert-err"
+      }else if(!this.majorEventDate){
+        this.errMsg = true
+        this.msg = "majorEventDate is missing"
+        this.cl = "alert-err"
+      }
+
+      if(!this.errMsg){
+        this.startDate=this.relativeStartDate
+        this.endDate=this.relativeEndDate
+        this.saveNewSchedule()
+        this.resetForm()
+        this.errMsg = true
+        this.cl = 'alert-success'
+        this.msg = "Calendar survey added successfully"
+      }
     }
   },
   computed: {
-    ...mapGetters("surveys", ["getScheduleTasksByStudy","getSurveysData","getScheduleTasksByUser"]),
+    ...mapGetters("surveys", ["getScheduleTasksByStudy","getSurveysData","getScheduleTasksByUser", "getUser"]),
+    setPatient() {
+      this.patient = this.getUser()
+      if(this.patient) {
+        return true
+      }
+      return false
+    },
     calendarMonthItems() {
       let tasks = this.$route.query.userId ?
                   this.getScheduleTasksByUser(this.studyId,this.$route.query.userId)
@@ -321,7 +436,7 @@ export default {
         }),
         store.dispatch("surveys/FetchAllSurveysData", {
           studyId: to.params.studyId
-        })
+        }),
       ]).then(() => {
         next();
       });
@@ -372,5 +487,8 @@ export default {
 }
 .modal-content {
   text-align: left;
+}
+.modal-show {
+  margin: 0.4em;
 }
 </style>

@@ -1,13 +1,10 @@
 import request from "@/Rest";
 
 
-export const AddUserData = async (
+export const AddPatientData = async (
     { commit },
     { studyId, userId, payload }
   ) => {
-    let user = await request
-      .GET(`/studies/${studyId}/users/${userId}/`)
-      .Execute();
     await request
         .PUT(
             `/studies/${studyId}/users/${userId}/`, 
@@ -17,5 +14,15 @@ export const AddUserData = async (
         )
         .Execute();
   };
+  
+export const GetPatient = async (
+    { commit },
+    { studyId, userId }
+    ) => {
+    let user = await request
+        .GET(`/studies/${studyId}/users/${userId}/`)
+        .Execute();
+    return user
+    };
   
   

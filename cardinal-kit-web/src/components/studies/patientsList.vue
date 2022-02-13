@@ -25,11 +25,13 @@
                     <div :class="cl" v-if="errMsg">
                       {{ msg }}
                     </div>
-                    <label>Operation date: </label>
-                    <input v-model="operationDate" name="operationDate" type="datetime-local" />
+                    <label>Major event name: </label>
+                    <input v-model="majorEventName" name="majorEventName" type="text" placeholder="Event name" />
+                    <label>{{ majorEventName }} date: </label>
+                    <input v-model="majorEventDate" name="majorEventDate" type="datetime-local" />
                     <br />
                     <div class="form-group text-center inline">
-                      <a @click="saveOperationDate" class="m-1 button" >
+                      <a @click="saveMajorEvent" class="m-1 button" >
                         Save
                       </a>
                       <a href="#" class="m-1 button">Cancel</a>
@@ -72,12 +74,13 @@ import moment from 'moment';
         loadingId : 0,
         currentPage: 1,
         limit: 10,
-        operationDate: null,
+        majorEventDate: null,
+        majorEventName: null,
         errMsg: false,
       }
     },
     methods: {
-      ...mapActions("patient", ["AddUserData"]),
+      ...mapActions("patient", ["AddPatientData"]),
       handleSelecPatient(patientId){
         this.loadingId = patientId
         this.$router.push({name: "healthUser", query: {studyId: this.studyId, userId: patientId }})
@@ -90,13 +93,17 @@ import moment from 'moment';
           this.currentPage = Math.ceil(total/this.limit)
         }
       },
-      saveOperationDate(){
+      saveMajorEvent(){
         this.cl = ""
         this.msg = ""
         this.errMsg=false
-        if(!this.operationDate){
+        if(!this.majorEventDate){
           this.errMsg = true
-          this.msg = "Operation date is missing"
+          this.msg = "majorEvent date is missing"
+          this.cl = "alert-err"
+        }else if (!this.majorEventName) {
+          this.errMsg = true
+          this.msg = "majorEvent name is missing"
           this.cl = "alert-err"
         }else if(!this.patient.id) {
           this.errMsg = true
@@ -109,10 +116,11 @@ import moment from 'moment';
             studyId: this.studyId,
             userId: this.patient.id,
             payload:{
-              operationDate: new Date(this.operationDate),
+              majorEventDate: new Date(this.majorEventDate),
+              majorEventName: this.majorEventName,
             }
           }
-          this.AddUserData(data)
+          this.AddPatientData(data)
           this.errMsg = true
           this.cl = 'alert-success'
           this.msg = `Added ${Object.keys(data.payload)} sucessfully`
@@ -124,10 +132,15 @@ import moment from 'moment';
         this.msg = ""
         this.errMsg= false
         this.patient = patient
-        if(patient.operationDate){
-          // this.operationDate = patient.operationDate.toDate().toLocaleString('en-US',{timeZone: 'UTC'});
-          this.operationDate=moment(this.patient.operationDate.toDate()).format('YYYY-MM-DDTHH:mm')
-          
+        if(this.patient.majorEventDate){
+          this.majorEventDate=moment(this.patient.majorEventDate.toDate()).format('YYYY-MM-DDTHH:mm')
+        } else {
+          this.majorEventDate=null
+        }
+        if(this.patient.majorEventName){
+          this.majorEventName=this.patient.majorEventName
+        } else {
+          this.majorEventName=null
         }
       },
     },
