@@ -4,7 +4,7 @@
       :studies="getUserStudies"
       :handleSelecStudy="handleSelecStudy"
     />
-    <extra-users/>
+    <extra-users v-if="getUsersIHaveAccessTo.length>0"/>
     <br />
   </div>
 </template>
@@ -25,6 +25,7 @@ export default {
   },
   computed: {
     ...mapGetters("user", ["getUserStudies","getUserRol","getUserId"]),
+    ...mapGetters("share",["getUsersIHaveAccessTo"]),
   },
   methods: {
     handleSelecStudy(studyId) {
