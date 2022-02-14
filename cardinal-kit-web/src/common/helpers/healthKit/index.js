@@ -116,7 +116,37 @@ export const transformHealthDataToGlobalFormat = (data) => {
   }
   if (data.body.count) {
     Value = data.body.count;
-    Unit = " "
+    switch(data.body.quantity_type){
+      case "HKQuantityTypeIdentifierFlightsClimbed":
+        Unit="Flight"
+        if(Value>1){
+          Unit+="s"
+        }
+        break;
+      case "HKQuantityTypeIdentifierPushCount":
+        Unit="Push"
+        if(Value>1){
+          Unit+="es"
+        }
+        break;
+      case "HKQuantityTypeIdentifierSwimmingStrokeCount":
+        Unit="Stroke"
+        if(Value>1){
+          Unit+="s"
+        }
+        break;
+      case "HKQuantityTypeIdentifierInhalerUsage": 
+      case "HKQuantityTypeIdentifierNumberOfTimesFallen":
+        Unit="Time"
+        if(Value>1){
+          Unit+="s"
+        }
+        break;
+      default:
+        Unit = " "
+        break;
+    }
+    
   }
   if (data.body.body_height) {
     Unit = data.body.body_height.unit;
