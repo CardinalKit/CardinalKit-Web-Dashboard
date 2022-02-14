@@ -154,7 +154,11 @@ export function getSpecificHealthDataGrapFormat(state) {
     }
     else if(code == "HKCategoryTypeIdentifierMindfulSession"){
       return MinfdfulData(data)
-    } else if (code.includes("Quantity")) {
+    }
+    else if (code == "HKCategoryTypeIdentifierSexualActivity"){
+      return SexualActivityData(data)
+    }
+    else if (code.includes("Quantity")) {
       let dataDict = {};
       if(data && data.length>0){
         data.forEach((record) => {
@@ -332,6 +336,33 @@ function MinfdfulData(data){
   }]
 }
 
+function SexualActivityData(data){
+  let dataFormat = []
+  let dataDict = {}
+  if(data && data.length>0){
+    data.forEach((record) => {
+      let date = DateFormat(record.Date.Date)
+      if (dataDict[date]){
+        dataDict[date].count+=1
+      }
+      else{
+        dataDict[date]={
+          date:date,
+          count:1
+        }
+      }
+    })
+  }
+  for (const [key, value] of Object.entries(dataDict)) {
+    dataFormat.push({ x: value.date, y: value.count });
+  }
+
+  return [{
+    name: "Sexual Activity",
+    data: dataFormat
+  }]
+} 
+
 export function getCategoryDataWebFormat(state) {
   return (categoryId) => {
     return state.healthWebFormat[categoryId];
@@ -347,7 +378,6 @@ export function getActivityIndexDataToGraphic(state){
   let metrics =state.userMetricData
   let data=[]
   metrics.forEach(element => {
-    console.log("element",Date.parse(element.date))
     data.push({"x":Date.parse(element.date),"y": parseInt(element.activityindex) })
   });
   let response = [{
