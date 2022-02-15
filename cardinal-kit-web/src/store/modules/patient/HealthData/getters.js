@@ -182,9 +182,52 @@ export function getSpecificHealthDataGrapFormat(state) {
         }
         dataFormat.push({ x: value.date, y: value.value.toFixed(2) });
       }
-    } else {
+    }
+    else if (code.includes("HKWorkout")) 
+    {
+      let types = {}
+      let dataFormat = []
+
       if(data && data.length){
         data.forEach((record) => {
+          console.log("extra",record.Extrada)
+          if(record.Extrada){
+            for (const [key, value] of Object.entries(record.Extrada)) {
+              console.log("key",key,"value",value.Value)
+              
+              if(types[key]){
+                let previousData = types[key]                
+                previousData.push({x:record.Date.Date, y:value.value})
+              }
+              else{
+                types[key]=[{x:record.Date.Date, y:value.value}]  
+              }
+            }
+          }
+        })
+        for (const [key, value] of Object.entries(types)) {
+          dataFormat.push({name:key,data:value})
+        }
+        console.log(dataFormat)
+        return dataFormat
+
+      }
+      
+
+
+
+      return [
+        {
+          name: code,
+          data: dataFormat,
+        },
+      ];
+    }
+    else {
+      
+      if(data && data.length){
+        data.forEach((record) => {
+          console.log("code",code)
           let yValue = record.Value;
           if (code.includes("Category")) {
             let array = GetCategoriesByHkType(code);

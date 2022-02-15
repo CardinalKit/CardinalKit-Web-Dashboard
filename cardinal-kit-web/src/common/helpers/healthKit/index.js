@@ -66,15 +66,18 @@ export const transformHealthDataToGlobalFormat = (data) => {
     //if is activity has 3 types of data
     ExtraData = {}
     if(data.body.distance){
-      ExtraData["distance"]=data.body.distance
+      ExtraData["distance"]= data.body.distance;
     }
 
     if(data.body.duration){
-      ExtraData["duration"]=data.body.duration
+      let transform = TransformTime(parseInt(data.body.duration.value))
+      transform["value"] = transform.Value
+      ExtraData["duration"]=transform
+
     }
 
     if(data.body.kcal_burned){
-      ExtraData["kcal_burned"]=data.body.kcal_burned
+      ExtraData["kcal"]=data.body.kcal_burned
     }
 
   }
@@ -218,7 +221,8 @@ export const transformHealthDataToGlobalFormat = (data) => {
     StartDate: StartDate,
     EndDate: EndDate,
     Logo:logo,
-    Color: "red"
+    Color: "red",
+    Extrada: ExtraData
   };
 };
 
