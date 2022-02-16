@@ -12,11 +12,22 @@ export function saveSpecificTypeData(state, payload) {
 
 
 export function saveLastCategoryData(state, {category,data}){
+    
     let categoryWebFormat = []
     data.forEach(element => {        
         if(element && element.length>0){
             let transform = transformHealthDataToGlobalFormat(element[0])
-            if(!transform.HkCode.includes("Category")){
+            if (transform.HkCode.includes("HKWorkoutActivityType")){
+                if(element.length>1){
+                    element.forEach((row)=>{
+                        categoryWebFormat.push(transformHealthDataToGlobalFormat(row))
+                    })
+                }
+                else{
+                    categoryWebFormat.push(transform)
+                }
+            }
+            else if(!transform.HkCode.includes("Category")){
                     transform.Value = 0
                 element.forEach(record => {
                     let NewRecord = transformHealthDataToGlobalFormat(record)
