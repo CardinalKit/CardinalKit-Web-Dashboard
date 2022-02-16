@@ -73,7 +73,7 @@ export default {
         handlePagination(pagination) {
             this.currentPage=pagination.currentPage
             this.limit=pagination.limit
-            let total = this.surveyData.length
+            let total = this.getUsersIHaveAccessTo.length
             if(this.currentPage > Math.ceil(total/this.limit)){
                 this.currentPage = Math.ceil(total/this.limit)
             }

@@ -154,7 +154,11 @@ export function getSpecificHealthDataGrapFormat(state) {
     }
     else if(code == "HKCategoryTypeIdentifierMindfulSession"){
       return MinfdfulData(data)
-    } else if (code.includes("Quantity")) {
+    }
+    else if (code == "HKCategoryTypeIdentifierSexualActivity"){
+      return SexualActivityData(data)
+    }
+    else if (code.includes("Quantity")) {
       let dataDict = {};
       if(data && data.length>0){
         data.forEach((record) => {
@@ -178,9 +182,52 @@ export function getSpecificHealthDataGrapFormat(state) {
         }
         dataFormat.push({ x: value.date, y: value.value.toFixed(2) });
       }
-    } else {
+    }
+    else if (code.includes("HKWorkout")) 
+    {
+      let types = {}
+      let dataFormat = []
+
       if(data && data.length){
         data.forEach((record) => {
+          console.log("extra",record.Extrada)
+          if(record.Extrada){
+            for (const [key, value] of Object.entries(record.Extrada)) {
+              console.log("key",key,"value",value.Value)
+              
+              if(types[key]){
+                let previousData = types[key]                
+                previousData.push({x:record.Date.Date, y:value.value})
+              }
+              else{
+                types[key]=[{x:record.Date.Date, y:value.value}]  
+              }
+            }
+          }
+        })
+        for (const [key, value] of Object.entries(types)) {
+          dataFormat.push({name:key,data:value})
+        }
+        console.log(dataFormat)
+        return dataFormat
+
+      }
+      
+
+
+
+      return [
+        {
+          name: code,
+          data: dataFormat,
+        },
+      ];
+    }
+    else {
+      
+      if(data && data.length){
+        data.forEach((record) => {
+          console.log("code",code)
           let yValue = record.Value;
           if (code.includes("Category")) {
             let array = GetCategoriesByHkType(code);
@@ -332,6 +379,33 @@ function MinfdfulData(data){
   }]
 }
 
+function SexualActivityData(data){
+  let dataFormat = []
+  let dataDict = {}
+  if(data && data.length>0){
+    data.forEach((record) => {
+      let date = DateFormat(record.Date.Date)
+      if (dataDict[date]){
+        dataDict[date].count+=1
+      }
+      else{
+        dataDict[date]={
+          date:date,
+          count:1
+        }
+      }
+    })
+  }
+  for (const [key, value] of Object.entries(dataDict)) {
+    dataFormat.push({ x: value.date, y: value.count });
+  }
+
+  return [{
+    name: "Sexual Activity",
+    data: dataFormat
+  }]
+} 
+
 export function getCategoryDataWebFormat(state) {
   return (categoryId) => {
     return state.healthWebFormat[categoryId];
@@ -347,7 +421,6 @@ export function getActivityIndexDataToGraphic(state){
   let metrics =state.userMetricData
   let data=[]
   metrics.forEach(element => {
-    console.log("element",Date.parse(element.date))
     data.push({"x":Date.parse(element.date),"y": parseInt(element.activityindex) })
   });
   let response = [{
