@@ -58,11 +58,18 @@ export const FetchActivities = async(payload)=>{
     .WHERE(["body.activity_name","!=",null])
     .ORDER_BY("body.activity_name")
     .ORDER_BY('header.creation_date_time',true)
-    .LIMIT(payload.limit)
-    .Execute()
-    let records = snapShot.docs.map((record) => {
-      return record.data();
+    .Execute()    
+
+    let frecords = {}
+    let records = []
+
+    snapShot.docs.map((record) => {      
+      frecords[record.data().body.activity_name]   = record.data()
     });
+
+    for (let [key, value] of Object.entries(frecords)){
+      records.push(value)
+    }
     return records
 }
 

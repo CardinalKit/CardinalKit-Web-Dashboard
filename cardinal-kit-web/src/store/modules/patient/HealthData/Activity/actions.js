@@ -32,7 +32,7 @@ export const FetchLastActivityData = async ({commit}, payload)=>{
     FetchLastQuantityData("HKQuantityTypeIdentifierSwimmingStrokeCount",{...payload,limit:1}),
     FetchLastQuantityData("HKQuantityTypeIdentifierDistanceSwimming",{...payload,limit:1}),
     FetchLastQuantityData("HKQuantityTypeIdentifierStepCount",{...payload,limit:1}),
-    FetchActivities({...payload,limit:1}),
+    FetchActivities({...payload}),
   ])
   commit("saveLastCategoryData",{ 
     category: payload.category,

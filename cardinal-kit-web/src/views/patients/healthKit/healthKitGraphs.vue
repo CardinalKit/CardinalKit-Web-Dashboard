@@ -1,5 +1,6 @@
 <template>
   <section class="statistic">
+  
     <!--   <h1 class="mb-5">Statistics</h1> -->
     <div class="graphic">
       <div class="mb-5">
@@ -142,7 +143,11 @@ export default {
         return "heart";
       } else if (this.hkCode == "HKCategoryTypeIdentifierMindfulSession") {
         return "mindful";
-      } else if (this.hkCode.includes("Category")) {
+      }
+      else if (this.hkCode == "HKCategoryTypeIdentifierSexualActivity"){
+        return "line"
+      }
+       else if (this.hkCode.includes("Category")) {
         return "scatter";
       } else {
         return "line";

@@ -66,15 +66,18 @@ export const transformHealthDataToGlobalFormat = (data) => {
     //if is activity has 3 types of data
     ExtraData = {}
     if(data.body.distance){
-      ExtraData["distance"]=data.body.distance
+      ExtraData["distance"]= data.body.distance;
     }
 
     if(data.body.duration){
-      ExtraData["duration"]=data.body.duration
+      let transform = TransformTime(parseInt(data.body.duration.value))
+      transform["value"] = transform.Value
+      ExtraData["duration"]=transform
+
     }
 
     if(data.body.kcal_burned){
-      ExtraData["kcal_burned"]=data.body.kcal_burned
+      ExtraData["kcal"]=data.body.kcal_burned
     }
 
   }
@@ -116,7 +119,37 @@ export const transformHealthDataToGlobalFormat = (data) => {
   }
   if (data.body.count) {
     Value = data.body.count;
-    Unit = " "
+    switch(data.body.quantity_type){
+      case "HKQuantityTypeIdentifierFlightsClimbed":
+        Unit="Flight"
+        if(Value>1){
+          Unit+="s"
+        }
+        break;
+      case "HKQuantityTypeIdentifierPushCount":
+        Unit="Push"
+        if(Value>1){
+          Unit+="es"
+        }
+        break;
+      case "HKQuantityTypeIdentifierSwimmingStrokeCount":
+        Unit="Stroke"
+        if(Value>1){
+          Unit+="s"
+        }
+        break;
+      case "HKQuantityTypeIdentifierInhalerUsage": 
+      case "HKQuantityTypeIdentifierNumberOfTimesFallen":
+        Unit="Time"
+        if(Value>1){
+          Unit+="s"
+        }
+        break;
+      default:
+        Unit = " "
+        break;
+    }
+    
   }
   if (data.body.body_height) {
     Unit = data.body.body_height.unit;
@@ -188,7 +221,8 @@ export const transformHealthDataToGlobalFormat = (data) => {
     StartDate: StartDate,
     EndDate: EndDate,
     Logo:logo,
-    Color: "red"
+    Color: "red",
+    Extrada: ExtraData
   };
 };
 
