@@ -81,7 +81,7 @@
             </div>
         </div>
       </div>
-      <a v-if="setPatient" class="modal-show button" href="#modalRelative" @click="resetForm">Add relative date survey</a>
+      <a v-if="patientHasMajorEvent" class="modal-show button" href="#modalRelative" @click="resetForm">Add relative date survey</a>
       <div class="modal" id="modalRelative">
         <div class="modal-content">
           <a class="modal-hide" href="#">✕</a>
@@ -93,7 +93,7 @@
               <h4>{{ majorEventName }} is scheduled on {{ dateDisplay(majorEventDate) }}</h4>
               <br /><br />
               <label>Relative start days: </label>
-              <input v-model="relativeStartDays" type="number" default="0" pattern="^[0-9]+" />
+              <input v-model="relativeStartDays" type="number" pattern="^[0-9]+" />
               <br />
               <div>
                 Start date: {{ calculateStartDate(this.majorEventDate, this.relativeStartDays) }}
@@ -319,9 +319,9 @@ export default {
   },
   computed: {
     ...mapGetters("surveys", ["getScheduleTasksByStudy","getSurveysData","getScheduleTasksByUser", "getUser"]),
-    setPatient() {
+    patientHasMajorEvent() {
       this.patient = this.getUser()
-      if(this.patient) {
+      if(this.patient?.majorEventDate) {
         return true
       }
       return false
