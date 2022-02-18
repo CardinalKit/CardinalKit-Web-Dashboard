@@ -268,7 +268,7 @@ export const CreateUserSchedule = async (
       )
       .Execute();
   }
-  dispatch(FetchUserScheduler, {studyId: studyId, userId: userId})
+  dispatch("FetchUserScheduler", {studyId: studyId, userId: userId})
 };
 // export const SaveQuestion = async ({ commit }, data) => {
 //   let studyId = data.studyId;
