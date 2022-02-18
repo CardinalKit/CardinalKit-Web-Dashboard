@@ -73,7 +73,7 @@
               />
               <br />
               <div class="form-group text-center inline">
-                <a @click="saveNewSchedule" class="m-1 button" >
+                <a @click="saveNewSchedule(false)" class="m-1 button" >
                   Save
                 </a>
                 <a href="#" class="m-1 button">Cancel</a>
@@ -241,7 +241,7 @@ export default {
         this.majorEventName=null
       }
     },
-    saveNewSchedule(){
+    saveNewSchedule(isRelative){
       this.cl = ""
       this.msg = ""
       this.errMsg=false
@@ -269,9 +269,12 @@ export default {
             interval:{ day:this.intervalDays},
             targetValues: [{groupIdentifier:this.SurveySelected}],
             text: this.description, 
-            relativeStartDays: this.relativeStartDays ? this.relativeStartDays:null,
-            relativeEndDays: this.relativeEndDays ? this.relativeEndDays:null,
           }
+        }
+
+        if(isRelative) {
+            data['payload']['relativeStartDays'] = this.relativeStartDays ? this.relativeStartDays:"0"
+            data['payload']['relativeEndDays'] = this.relativeEndDays ? this.relativeEndDays:null
         }
 
         if(this.$route.query.userId){
@@ -309,7 +312,7 @@ export default {
       if(!this.errMsg){
         this.startDate=this.relativeStartDate
         this.endDate=this.relativeEndDate
-        this.saveNewSchedule()
+        this.saveNewSchedule(true)
         this.resetForm()
         this.errMsg = true
         this.cl = 'alert-success'
