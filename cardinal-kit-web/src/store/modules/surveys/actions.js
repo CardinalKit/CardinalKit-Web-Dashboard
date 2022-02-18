@@ -179,7 +179,7 @@ export const FetchUserScheduler = async ({ commit }, { studyId, userId }) => {
   });
 };
 
-export const CreateStudySchedule = async ({ commit }, { studyId, payload }) => {
+export const CreateStudySchedule = async ({ commit, dispatch }, { studyId, payload }) => {
   let surveysTaskId = null;
   let scheduleElements = [];
   let tasks = await request
@@ -219,10 +219,11 @@ export const CreateStudySchedule = async ({ commit }, { studyId, payload }) => {
       })
       .Execute();
   }
+  dispatch("FetchStudyScheduler", {studyId: studyId})
 };
 
 export const CreateUserSchedule = async (
-  { commit },
+  { commit, dispatch },
   { studyId, userId, payload }
 ) => {
   let surveysTaskId = null;
@@ -267,6 +268,7 @@ export const CreateUserSchedule = async (
       )
       .Execute();
   }
+  dispatch(FetchUserScheduler, {studyId: studyId, userId: userId})
 };
 // export const SaveQuestion = async ({ commit }, data) => {
 //   let studyId = data.studyId;
