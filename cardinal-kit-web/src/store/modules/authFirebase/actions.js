@@ -11,6 +11,7 @@ export function reset({ commit }) {
 }
 
 export async function SignIn({ commit }, payload) {
+  commit("cleanErrors")
   return await auth
     .signInWithEmailAndPassword(payload.email, payload.password)
     .then(() => {
@@ -23,6 +24,13 @@ export async function SignIn({ commit }, payload) {
       commit("isLogged", false);
       var errorCode = error.code;
       var errorMessage = error.message;
+      if(error.code == "auth/network-request-failed"){
+        commit("error","No internet connection")
+      }
+      else{
+        commit("error","The username or password is incorrect")
+      }
+      
       return {
         isLogged: false,
         error: errorMessage,
