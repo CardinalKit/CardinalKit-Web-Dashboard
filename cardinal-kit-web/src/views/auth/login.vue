@@ -8,6 +8,9 @@
         <br>
         <h4 class="my-2 text-muted">Sign In</h4>
         <form class="login-form" @submit.prevent="handleSubmitLogin">
+          <div v-if="getError.error" className="auth__error">
+            <p class="mb-1 subtitle">{{getError.errorMessage}}</p>
+          </div>
           <div class="form-group">
             <label for="email">Email Address</label>
             <input
@@ -67,7 +70,7 @@
 import Logo from "@/components/auth/Logo";
 import Card from "@/components/auth/Card";
 import store from "@/store"
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import SocialButton from '../../components/auth/SocialButton.vue';
 
 export default {
@@ -75,13 +78,17 @@ export default {
     return {
       email: "",
       password: "",
-      logo: require('@/assets/LogoCardinalKit@2x.png')
+      logo: require('@/assets/LogoCardinalKit@2x.png'),
+      showError: false
     };
   },
   components: {
     Logo,
     Card,
     SocialButton,
+  },
+  computed:{
+    ...mapGetters("auth",["getError"])
   },
   methods: {
     ...mapActions("auth", ["SignIn","LogInWithGoogle", "LogInWithAppleId"]),
@@ -94,6 +101,7 @@ export default {
       })
     },
     handleGoogleLogin(){
+      this.showError = false
       this.LogInWithGoogle()
       .then((response)=>{
         if(response.isLogged){
@@ -176,6 +184,14 @@ export default {
       margin-top: 0;
       text-align: center;
     }
+  }
+  .auth__error {
+    margin-bottom: .5rem;
+    display: grid;
+    gap: 10px;
+    margin-top: 0;
+    text-align: center;
+    color: red;
   }
 }
 
