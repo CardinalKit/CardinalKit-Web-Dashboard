@@ -1,0 +1,9 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/cardinal-kit-web"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+    reviewers:
+      - "vishnuravi"
