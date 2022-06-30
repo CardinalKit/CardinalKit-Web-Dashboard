@@ -1,4 +1,5 @@
-![CardinalKit Logo](https://github.com/CardinalKit/CardinalKit/raw/master/CardinalKit-Web-Assets/header.png?raw=true)
+![CardinalKit Logo](https://raw.githubusercontent.com/CardinalKit/.github/main/assets/ck-header-light.png#gh-light-mode-only)
+![CardinalKit Logo](https://raw.githubusercontent.com/CardinalKit/.github/main/assets/ck-header-dark.png#gh-dark-mode-only)
 
 # CardinalKit Web Dashboard
 
@@ -13,4 +14,5 @@ Please see our [documentation](https://cardinalkit.org/cardinalkit-docs/2-web-da
 ## License
 CardinalKit is available under the MIT license. See the LICENSE file for more info.
 
-![Stanford Byers Center for Biodesign](https://github.com/CardinalKit/CardinalKit/raw/master/CardinalKit-Web-Assets/footer.png?raw=true)
+![Stanford Byers Center for Biodesign Logo](https://raw.githubusercontent.com/CardinalKit/.github/main/assets/ck-footer-light.png#gh-light-mode-only)
+![Stanford Byers Center for Biodesign Logo](https://raw.githubusercontent.com/CardinalKit/.github/main/assets/ck-footer-dark.png#gh-dark-mode-only)
