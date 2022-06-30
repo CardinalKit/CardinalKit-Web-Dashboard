@@ -46,7 +46,7 @@ export default {
 
 .modal-content {
   position: relative;
-  width: 30%;
+  width: 80%;
   padding: 10px;
   background-color: white;
   text-align: center;
