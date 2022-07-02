@@ -19,10 +19,10 @@
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vue-signature-pad": "^3.0.1",
-    "vue-simple-calendar": "^6.0.1",
+    "vue-simple-calendar": "^6.0.4",
     "vue-spinner": "^1.0.4",
     "vue-sweetalert2": "^5.0.2",
-    "vue3-apexcharts": "^1.4.0",
+    "vue3-apexcharts": "^1.4.1",
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {
@@ -34,7 +34,7 @@
     "@vue/compiler-sfc": "^3.0.0",
     "@vue/test-utils": "^2.0.0-0",
     "sass": "^1.46.0",
-    "sass-loader": "^8.0.2",
+    "sass-loader": "^13.0.2",
     "typescript": "~3.9.3",
     "vue-jest": "^5.0.0-0"
   },
