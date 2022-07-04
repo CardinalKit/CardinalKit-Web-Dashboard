@@ -17,7 +17,7 @@
     "uuid": "^8.3.2",
     "v-calendar": "^3.0.0-alpha.5",
     "vue": "^3.0.0",
-    "vue-router": "^4.0.0-0",
+    "vue-router": "^4.1.0",
     "vue-signature-pad": "^3.0.1",
     "vue-simple-calendar": "^6.0.4",
     "vue-spinner": "^1.0.4",
