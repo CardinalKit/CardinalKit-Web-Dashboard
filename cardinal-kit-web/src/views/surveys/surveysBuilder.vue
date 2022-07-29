@@ -105,7 +105,7 @@ export default {
     validSurvey(questions, data,isValid){
       // review if question has data
       for(const[key,value] of Object.entries(questions)){
-        if(!this.$refs[value.id].reviewQuestionData()){
+        if(!this.$refs[value.id][0].reviewQuestionData()){
           isValid = false
         }        
       }

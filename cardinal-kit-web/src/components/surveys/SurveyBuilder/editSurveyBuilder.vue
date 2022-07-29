@@ -142,7 +142,7 @@ export default {
       let isValid = true
       for(const[key,value] of Object.entries(questions)){
         console.log("tryReview")
-        if(!this.$refs[value.id].reviewQuestionData()){
+        if(!this.$refs[value.id][0].reviewQuestionData()){
           isValid = false
         }
       }
